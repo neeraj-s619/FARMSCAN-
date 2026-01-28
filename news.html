@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FasalDrishti AI - Live News</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Public+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Public Sans"', 'sans-serif'],
+                        display: ['"Archivo Black"', 'sans-serif'],
+                    },
+                    colors: {
+                        neo: {
+                            green: '#00D664',
+                            black: '#121212',
+                            white: '#FFFFFF',
+                            red: '#FF4D4D',
+                            gray: '#F3F4F6',
+                            orange: '#FF9F1C',
+                            blue: '#3B82F6',
+                            purple: '#A855F7'
+                        }
+                    },
+                    boxShadow: {
+                        'hard': '4px 4px 0px 0px #121212',
+                        'hard-sm': '2px 2px 0px 0px #121212',
+                    },
+                    borderWidth: {
+                        '3': '3px',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'slide-up': 'slideUp 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)' },
+                            '100%': { transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            background-color: #F3F4F6;
+            color: #121212;
+            background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .neo-card {
+            background-color: #FFFFFF;
+            border: 3px solid #121212;
+            box-shadow: 4px 4px 0px 0px #121212;
+        }
+        
+        /* Horizontal Scroll Hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Category Button Active State */
+        .cat-btn.active {
+            background-color: #00D664;
+            color: white;
+            box-shadow: none;
+            transform: translate(2px, 2px);
+        }
+
+        /* Modal Visibility */
+        .modal-container {
+            display: none;
+        }
+        .modal-container.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="h-[100dvh] w-full flex justify-center items-center font-sans overflow-hidden">
+
+    <div class="relative w-full max-w-sm h-full shadow-2xl overflow-hidden flex flex-col bg-[#F3F4F6]">
+
+        <header class="bg-white/90 backdrop-blur-md border-b-3 border-neo-black px-5 py-4 z-30 shrink-0">
+            <div class="flex justify-between items-start mb-1">
+                <h1 class="font-display text-xl uppercase tracking-tight leading-none text-neo-black w-2/3">Farmer Live News</h1>
+                <span class="bg-neo-red text-white text-[10px] font-black px-2 py-0.5 border-2 border-neo-black shadow-hard-sm animate-pulse">LIVE</span>
+            </div>
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Last updated: <span id="time-stamp">--:--:--</span></p>
+        </header>
+
+        <div class="bg-white border-b-3 border-neo-black py-3 pl-5 shrink-0">
+            <div class="flex gap-3 overflow-x-auto no-scrollbar pr-5 pb-1">
+                <button onclick="filterNews('all')" class="cat-btn active bg-white border-3 border-neo-black px-4 py-3 min-w-[80px] flex flex-col items-center justify-center shadow-hard active:translate-y-1 active:shadow-none transition-all rounded-none" data-cat="all">
+                    <i data-lucide="layers" class="w-5 h-5 mb-1"></i><span class="font-black text-[9px] uppercase">All</span>
+                </button>
+                <button onclick="filterNews('govt')" class="cat-btn bg-white border-3 border-neo-black px-4 py-3 min-w-[80px] flex flex-col items-center justify-center shadow-hard active:translate-y-1 active:shadow-none transition-all rounded-none" data-cat="govt">
+                    <i data-lucide="landmark" class="w-5 h-5 mb-1"></i><span class="font-black text-[9px] uppercase text-center leading-tight">Govt<br>Schemes</span>
+                </button>
+                <button onclick="filterNews('weather')" class="cat-btn bg-white border-3 border-neo-black px-4 py-3 min-w-[80px] flex flex-col items-center justify-center shadow-hard active:translate-y-1 active:shadow-none transition-all rounded-none" data-cat="weather">
+                    <i data-lucide="cloud-rain" class="w-5 h-5 mb-1"></i><span class="font-black text-[9px] uppercase">Weather</span>
+                </button>
+                <button onclick="filterNews('crop')" class="cat-btn bg-white border-3 border-neo-black px-4 py-3 min-w-[80px] flex flex-col items-center justify-center shadow-hard active:translate-y-1 active:shadow-none transition-all rounded-none" data-cat="crop">
+                    <i data-lucide="sprout" class="w-5 h-5 mb-1"></i><span class="font-black text-[9px] uppercase text-center leading-tight">Crop<br>News</span>
+                </button>
+                <button onclick="filterNews('market')" class="cat-btn bg-white border-3 border-neo-black px-4 py-3 min-w-[80px] flex flex-col items-center justify-center shadow-hard active:translate-y-1 active:shadow-none transition-all rounded-none" data-cat="market">
+                    <i data-lucide="trending-up" class="w-5 h-5 mb-1"></i><span class="font-black text-[9px] uppercase text-center leading-tight">Market<br>Prices</span>
+                </button>
+            </div>
+        </div>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar p-5 pb-24 space-y-5" id="news-container">
+            </main>
+
+        <div id="news-modal" class="modal-container fixed inset-0 z-50 bg-neo-black/90 items-end justify-center">
+            <div class="w-full h-[85vh] bg-white border-t-3 border-x-3 border-neo-black rounded-t-3xl shadow-2xl flex flex-col animate-slide-up max-w-sm overflow-hidden">
+                
+                <div class="bg-gray-50 border-b-3 border-neo-black p-4 flex justify-between items-center shrink-0">
+                    <span id="modal-tag" class="text-[10px] font-black text-white px-2 py-1 uppercase inline-block border-2 border-neo-black shadow-hard-sm">TAG</span>
+                    <button onclick="closeModal()" class="w-8 h-8 bg-white border-2 border-neo-black rounded-full flex items-center justify-center hover:bg-neo-red hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4 stroke-[3]"></i>
+                    </button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-6">
+                    <h2 id="modal-title" class="font-display text-2xl uppercase leading-tight mb-2">News Title Here</h2>
+                    
+                    <div class="flex items-center gap-2 mb-6 text-[10px] font-bold text-gray-400 uppercase">
+                        <i data-lucide="clock" class="w-3 h-3"></i> <span id="modal-time">2h ago</span>
+                        <span>•</span>
+                        <span id="modal-source" class="text-neo-black">Source Name</span>
+                    </div>
+
+                    <div class="prose prose-sm">
+                        <p id="modal-desc" class="font-bold text-sm text-gray-600 leading-relaxed mb-4">
+                            Short description goes here.
+                        </p>
+                        
+                        <div class="bg-blue-50 border-l-4 border-neo-black p-4 mb-4">
+                            <h4 class="font-black text-xs uppercase mb-2">Key Highlights</h4>
+                            <ul id="modal-points" class="list-disc list-inside text-xs font-bold text-gray-700 space-y-1">
+                                </ul>
+                        </div>
+
+                        <p id="modal-full-content" class="text-xs text-gray-500 leading-relaxed">
+                            Full article content text block...
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t-3 border-neo-black bg-white shrink-0">
+                    <button onclick="closeModal()" class="w-full bg-neo-black text-white py-3 font-display uppercase border-3 border-neo-black shadow-hard active:shadow-none active:translate-y-1">Close Article</button>
+                </div>
+            </div>
+        </div>
+
+        <nav class="bg-white border-t-3 border-neo-black h-20 shrink-0 grid grid-cols-5 relative z-40">
+            <button onclick="window.location.href='index.html'" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="home" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i><span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">Home</span>
+            </button>
+            <button onclick="window.location.href='index.html'" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="scan-line" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i><span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">Analyze</span>
+            </button>
+            <button class="flex flex-col items-center justify-center gap-1 bg-gray-50">
+                <i data-lucide="newspaper" class="w-5 h-5 text-neo-green stroke-[3]"></i><span class="text-[9px] font-black text-neo-black uppercase">News</span>
+            </button>
+            <button onclick="window.location.href='index.html'" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="bot" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i><span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">Chat</span>
+            </button>
+            <button onclick="window.location.href='profile.html'" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="user" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i><span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">Profile</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 1. LIVE TIMESTAMP
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('time-stamp').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // 2. EXPANDED DATASET (With Relevant Data)
+        const newsData = [
+            {
+                id: 1,
+                category: 'tech',
+                tag: 'AGRITECH MAG',
+                tagColor: 'bg-neo-green',
+                icon: 'sprout',
+                time: '1h ago',
+                source: 'ICAR Research',
+                title: 'New Drought-Resistant Wheat Seed',
+                desc: 'Scientists release a new variety that yields 20% more in dry conditions. Available next Kharif season.',
+                points: [
+                    'Variety Name: HW-2024 (DryGold)',
+                    'Water Requirement: 40% less than regular wheat',
+                    'Yield Potential: 55 quintals per hectare',
+                    'Availability: All Krishi Vigyan Kendras from June 1st'
+                ],
+                fullContent: 'The Indian Council of Agricultural Research (ICAR) has successfully developed "HW-2024", a new wheat variety specifically designed for arid regions in Rajasthan and Gujarat. Unlike traditional seeds that require 4-5 irrigation cycles, this variety matures with just 2-3 cycles.'
+            },
+            {
+                id: 2,
+                category: 'market',
+                tag: 'MARKET ALERT',
+                tagColor: 'bg-neo-orange',
+                icon: 'trending-up',
+                time: '2h ago',
+                source: 'Mandi Parishad',
+                title: 'Tomato Prices Surge by 15%',
+                desc: 'Due to heavy rains in Karnataka, tomato supply has dipped, pushing prices up in northern mandis.',
+                points: [
+                    'Current Wholesale Price: ₹3,200/quintal',
+                    'Expected Retail Price: ₹60-70/kg',
+                    'Cause: Crop damage in Kolar region',
+                    'Forecast: Prices likely to stabilize in 2 weeks'
+                ],
+                fullContent: 'Tomato prices have witnessed a sharp spike across North Indian markets today. Traders report a 40% reduction in truck arrivals from Karnataka and Maharashtra. Farmers with late-harvest stock are advised to bring produce to mandis to capitalize on current rates.'
+            },
+            {
+                id: 3,
+                category: 'govt',
+                tag: 'SUBSIDY',
+                tagColor: 'bg-neo-blue',
+                icon: 'landmark',
+                time: '4h ago',
+                source: 'Ministry of Agriculture',
+                title: 'PM Kisan Installment Released',
+                desc: 'The 15th installment of PM Kisan Samman Nidhi has been credited. Check your status now.',
+                points: [
+                    'Amount Credited: ₹2,000 per farmer',
+                    'Total Disbursed: ₹18,000 Crores',
+                    'Beneficiaries: 8 Crore farmers',
+                    'Helpdesk: 155261'
+                ],
+                fullContent: 'The Honorable Prime Minister has released the 15th installment of the PM Kisan Samman Nidhi Yojana today via DBT. Farmers who have completed their e-KYC should check their linked bank accounts. Those who missed the deadline can visit the nearest CSC center.'
+            },
+            {
+                id: 4,
+                category: 'weather',
+                tag: 'MONSOON',
+                tagColor: 'bg-neo-red',
+                icon: 'cloud-lightning',
+                time: '5h ago',
+                source: 'IMD Alert',
+                title: 'Heavy Rainfall Alert for UP',
+                desc: 'IMD predicts heavy rainfall in Eastern UP for the next 48 hours. Farmers advised to drain fields.',
+                points: [
+                    'Alert Level: Orange Alert',
+                    'Wind Speed: 40-50 kmph gusting',
+                    'Affected Districts: Gorakhpur, Basti, Deoria',
+                    'Advisory: Postpone urea application'
+                ],
+                fullContent: 'A low-pressure area forming over the Bay of Bengal is likely to cause heavy to very heavy rainfall in Eastern Uttar Pradesh. Paddy farmers should ensure proper drainage channels are open to prevent waterlogging, which can damage the root system at this stage.'
+            },
+            {
+                id: 5,
+                category: 'tech',
+                tag: 'DRONE TECH',
+                tagColor: 'bg-neo-purple',
+                icon: 'plane',
+                time: '1d ago',
+                source: 'Agri-Infra Fund',
+                title: 'Drone Spraying Subsidy Scheme',
+                desc: 'Govt announces 50% subsidy on hiring drones for pesticide spraying to reduce health risks.',
+                points: [
+                    'Subsidy: 50% of rental cost or ₹300/acre',
+                    'Application: Through "AgriStack" Portal',
+                    'Eligibility: Small & Marginal Farmers',
+                    'Benefit: Saves 30% chemical cost'
+                ],
+                fullContent: 'To promote precision farming, the government has launched a new scheme subsidizing drone rentals. This initiative aims to reduce the health hazards associated with manual pesticide spraying and improve coverage efficiency. FPOs are being given grants to purchase drones for renting out.'
+            },
+            {
+                id: 6,
+                category: 'crop',
+                tag: 'PEST ALERT',
+                tagColor: 'bg-neo-red',
+                icon: 'bug',
+                time: '1d ago',
+                source: 'KVK Advisory',
+                title: 'Pink Bollworm Warning',
+                desc: 'Cotton farmers in Maharashtra warned about early Pink Bollworm infestation. Install traps now.',
+                points: [
+                    'Infestation Level: Moderate to High',
+                    'Action: Install Pheromone Traps (5/acre)',
+                    'Chemical: Profenofos 50 EC (2ml/liter)',
+                    'Observation: Check flower rosettes daily'
+                ],
+                fullContent: 'Field surveys in Vidarbha have shown early signs of Pink Bollworm (PBW) in cotton crops aged 45-60 days. KVK scientists recommend immediate installation of pheromone traps to monitor moth activity. If moth catch exceeds 8 per trap for 3 consecutive days, chemical intervention is necessary.'
+            }
+        ];
+
+        // 3. RENDERING LOGIC
+        function renderNews(filterCat) {
+            const container = document.getElementById('news-container');
+            container.innerHTML = ''; 
+
+            const filteredData = filterCat === 'all' 
+                ? newsData 
+                : newsData.filter(item => item.category === filterCat);
+
+            if(filteredData.length === 0) {
+                container.innerHTML = `<div class="flex flex-col items-center justify-center py-10 opacity-50"><i data-lucide="inbox" class="w-12 h-12 mb-2"></i><p class="font-bold uppercase text-sm">No updates yet</p></div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            filteredData.forEach(item => {
+                const html = `
+                    <div class="neo-card p-5 animate-fade-in">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-gray-100 border-3 border-neo-black flex items-center justify-center shrink-0">
+                                <i data-lucide="${item.icon}" class="w-6 h-6 text-neo-black"></i>
+                            </div>
+                            <div class="text-right">
+                                <span class="${item.tagColor} text-white text-[9px] font-black px-2 py-0.5 border-2 border-neo-black shadow-hard-sm uppercase inline-block mb-1">${item.tag}</span>
+                                <p class="text-[10px] font-bold text-gray-400 uppercase">${item.time}</p>
+                            </div>
+                        </div>
+                        <h3 class="font-display text-lg uppercase leading-tight mb-2">${item.title}</h3>
+                        <p class="text-xs font-bold text-gray-500 leading-relaxed mb-4 line-clamp-2">${item.desc}</p>
+                        <button onclick="openModal(${item.id})" class="w-full bg-white border-3 border-neo-black py-2 shadow-hard active:shadow-none active:translate-y-1 transition-all flex items-center justify-center gap-1 group hover:bg-gray-50">
+                            <span class="font-black text-xs uppercase">Read Full Story</span>
+                            <i data-lucide="arrow-right" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+            lucide.createIcons();
+        }
+
+        // 4. MODAL LOGIC
+        function openModal(id) {
+            const item = newsData.find(n => n.id === id);
+            if(!item) return;
+
+            // Populate Modal
+            const modalTag = document.getElementById('modal-tag');
+            modalTag.innerText = item.tag;
+            modalTag.className = `${item.tagColor} text-white text-[10px] font-black px-2 py-1 uppercase inline-block border-2 border-neo-black shadow-hard-sm`;
+
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-time').innerText = item.time;
+            document.getElementById('modal-source').innerText = item.source;
+            document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-full-content').innerText = item.fullContent;
+
+            // Render Points
+            const pointsContainer = document.getElementById('modal-points');
+            pointsContainer.innerHTML = '';
+            item.points.forEach(point => {
+                const li = document.createElement('li');
+                li.innerText = point;
+                pointsContainer.appendChild(li);
+            });
+
+            // Show Modal
+            document.getElementById('news-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('news-modal').classList.remove('active');
+        }
+
+        // 5. FILTER HANDLER
+        function filterNews(category) {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.dataset.cat === category) {
+                    btn.classList.add('active');
+                    btn.classList.remove('bg-white');
+                } else {
+                    btn.classList.remove('active');
+                    btn.classList.add('bg-white');
+                }
+            });
+            renderNews(category);
+        }
+
+        // Init
+        renderNews('all');
+
+    </script>
+</body>
+</html>

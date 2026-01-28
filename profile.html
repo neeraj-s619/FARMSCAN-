@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FasalDrishti AI - My Profile</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Public+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Public Sans"', 'sans-serif'],
+                        display: ['"Archivo Black"', 'sans-serif'],
+                    },
+                    colors: {
+                        neo: {
+                            green: '#00D664',
+                            black: '#121212',
+                            white: '#FFFFFF',
+                            red: '#FF4D4D',
+                            gray: '#F3F4F6',
+                            orange: '#FF9F1C'
+                        }
+                    },
+                    boxShadow: {
+                        'hard': '4px 4px 0px 0px #121212',
+                        'hard-sm': '2px 2px 0px 0px #121212',
+                    },
+                    borderWidth: {
+                        '3': '3px',
+                    },
+                    animation: {
+                        'slide-down': 'slideDown 0.3s ease-out forwards',
+                        'slide-up': 'slideUp 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideDown: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)' },
+                            '100%': { transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            background-color: #F3F4F6;
+            color: #121212;
+            background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .neo-card {
+            background-color: #FFFFFF;
+            border: 3px solid #121212;
+            box-shadow: 4px 4px 0px 0px #121212;
+        }
+        
+        .neo-card-active:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px #121212;
+        }
+
+        /* Toggle Switch Styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #00D664;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #00D664;
+        }
+        .toggle-checkbox {
+            right: 0;
+            z-index: 10;
+            border: 3px solid #121212;
+            transition: all 0.2s ease;
+        }
+        .toggle-label {
+            transition: background-color 0.2s ease;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="h-[100dvh] w-full flex justify-center items-center font-sans overflow-hidden">
+
+    <div id="toast" class="fixed top-4 left-4 right-4 z-50 transform -translate-y-[200%] transition-transform duration-300 pointer-events-none">
+        <div class="bg-neo-black border-l-8 border-neo-green p-4 shadow-hard flex items-center gap-3 text-white">
+            <i data-lucide="check-circle" class="w-6 h-6 stroke-[3] text-neo-green"></i>
+            <span id="toast-msg" class="font-bold uppercase tracking-wide text-xs leading-tight">Notification</span>
+        </div>
+    </div>
+
+    <div class="relative w-full max-w-sm h-full shadow-2xl overflow-hidden flex flex-col bg-[#F3F4F6]">
+
+        <header class="bg-white/90 backdrop-blur-md border-b-3 border-neo-black px-5 py-4 flex justify-between items-center z-30 shrink-0">
+            <div>
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-0.5">FasalDrishti AI</p>
+                <h1 class="font-display text-xl uppercase tracking-tight leading-none text-neo-black">My Profile</h1>
+            </div>
+            <button onclick="showToast('Settings Menu Opened')" class="w-9 h-9 border-3 border-neo-black bg-white flex items-center justify-center shadow-hard active:shadow-none active:translate-y-1 transition-all">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar p-5 pb-24 space-y-6">
+
+            <div class="flex flex-col items-center justify-center pt-2">
+                <div class="relative group">
+                    <div class="w-24 h-24 bg-green-100 border-3 border-neo-black rounded-full shadow-hard flex items-center justify-center overflow-hidden mb-3">
+                        <i data-lucide="user" class="w-12 h-12 text-neo-green stroke-[2.5]"></i>
+                    </div>
+                    <button onclick="editProfile()" class="absolute bottom-2 right-0 bg-neo-black text-white p-1.5 rounded-full border-2 border-white shadow-sm active:scale-90 transition-transform hover:bg-neo-green">
+                        <i data-lucide="pencil" class="w-3 h-3"></i>
+                    </button>
+                </div>
+                <h2 class="font-display text-2xl uppercase tracking-tight">Rajesh Kumar</h2>
+                <div class="flex items-center gap-2 mt-1">
+                    <p class="font-bold text-xs text-gray-500 bg-white px-2 py-0.5 border-2 border-neo-black shadow-hard-sm">ID: 882910</p>
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-neo-green border border-black"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <div onclick="showToast('Farm Health is Excellent!')" class="neo-card p-3 flex-1 text-center bg-white cursor-pointer active:scale-95 transition-transform">
+                    <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Farm Score</p>
+                    <p class="font-display text-3xl text-neo-green">A+</p>
+                </div>
+                <div onclick="showToast('View Scan History')" class="neo-card p-3 flex-1 text-center bg-white cursor-pointer active:scale-95 transition-transform">
+                    <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Scans</p>
+                    <p class="font-display text-3xl text-neo-black">42</p>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex justify-between items-center px-1">
+                    <h3 class="font-black text-[10px] text-gray-500 uppercase tracking-widest">Farm Details</h3>
+                    <button onclick="editProfile()" class="text-[10px] font-bold text-neo-green uppercase hover:underline">Edit</button>
+                </div>
+                
+                <div class="bg-white border-3 border-neo-black p-0 shadow-hard overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b-3 border-neo-black hover:bg-gray-50 transition-colors">
+                        <span class="font-black text-xs text-gray-400 uppercase tracking-wide">Main Crop Type</span>
+                        <span class="font-bold text-sm text-neo-black">Tomato</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center p-4 border-b-3 border-neo-black hover:bg-gray-50 transition-colors">
+                        <span class="font-black text-xs text-gray-400 uppercase tracking-wide">Phone Number</span>
+                        <span class="font-bold text-sm text-neo-black">98765 43210</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center p-4 hover:bg-gray-50 transition-colors">
+                        <span class="font-black text-xs text-gray-400 uppercase tracking-wide">Village</span>
+                        <span class="font-bold text-sm text-neo-black">Rampur, UP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                
+                <div class="bg-white border-3 border-neo-black p-4 shadow-hard flex justify-between items-center">
+                    <div>
+                        <p class="font-black text-xs text-gray-400 uppercase tracking-wide">Language</p>
+                        <p class="font-bold text-sm text-neo-black">English</p>
+                    </div>
+                    <button onclick="window.location.href='language.html'" class="text-xs font-black text-neo-green hover:underline uppercase border-2 border-transparent hover:border-neo-green px-2 py-1 transition-all rounded">
+                        Change
+                    </button>
+                </div>
+
+                <div class="bg-white border-3 border-neo-black p-4 shadow-hard flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-sm text-neo-black uppercase">Offline Mode</p>
+                        <p class="text-[10px] font-bold text-gray-400">Save data usage</p>
+                    </div>
+                    <div class="relative inline-block w-12 align-middle select-none">
+                        <input type="checkbox" name="toggle" id="toggle" onchange="toggleOfflineMode(this)" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white appearance-none cursor-pointer"/>
+                        <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer border-3 border-neo-black"></label>
+                    </div>
+                </div>
+
+                <button onclick="callHelpline()" class="w-full bg-neo-black text-white border-3 border-neo-black p-4 shadow-hard active:shadow-none active:translate-y-1 flex items-center justify-center gap-3 transition-all group">
+                    <i data-lucide="phone-call" class="w-5 h-5 text-neo-green group-hover:animate-pulse"></i>
+                    <span class="font-display text-sm uppercase tracking-wider">Call Kisan Helpline</span>
+                </button>
+
+                <button onclick="handleLogout()" class="w-full bg-white text-neo-red border-3 border-neo-black p-4 shadow-hard active:shadow-none active:translate-y-1 flex items-center justify-center gap-2 mb-8 group hover:bg-red-50 transition-colors">
+                    <i data-lucide="log-out" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    <span class="font-black text-sm uppercase tracking-wider">Logout Account</span>
+                </button>
+
+            </div>
+
+        </main>
+
+        <nav class="bg-white border-t-3 border-neo-black h-20 shrink-0 grid grid-cols-5 relative z-40">
+            <button onclick="handleNav('home')" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="home" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i>
+                <span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">Home</span>
+            </button>
+            <button onclick="handleNav('analyze')" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="scan-line" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i>
+                <span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">Analyze</span>
+            </button>
+            <button onclick="handleNav('news')" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="newspaper" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i>
+                <span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">News</span>
+            </button>
+            <button onclick="handleNav('chat')" class="flex flex-col items-center justify-center gap-1 active:bg-gray-50 group">
+                <i data-lucide="bot" class="w-5 h-5 text-gray-400 group-hover:text-neo-black transition-colors"></i>
+                <span class="text-[9px] font-bold text-gray-400 uppercase group-hover:text-neo-black transition-colors">Chat</span>
+            </button>
+            <button class="flex flex-col items-center justify-center gap-1 bg-gray-50">
+                <i data-lucide="user" class="w-5 h-5 text-neo-green stroke-[3]"></i>
+                <span class="text-[9px] font-black text-neo-black uppercase">Profile</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 1. Navigation Handler
+        function handleNav(tab) {
+            // Simulate navigation back to main dashboard
+            // In a real app, this would route to /dashboard/home, etc.
+            // Here we reload index.html (Dashboard)
+            console.log(`Navigating to ${tab}`);
+            window.location.href = 'index.html';
+        }
+
+        // 2. Edit Profile Simulation
+        function editProfile() {
+            showToast("Edit Mode Enabled");
+            // Logic to turn text into inputs would go here
+        }
+
+        // 3. Offline Mode Toggle
+        function toggleOfflineMode(checkbox) {
+            if(checkbox.checked) {
+                showToast("Offline Mode Enabled");
+            } else {
+                showToast("You are Online");
+            }
+        }
+
+        // 4. Call Helpline
+        function callHelpline() {
+            // Uses standard tel: protocol
+            window.location.href = 'tel:18001801551'; 
+            // Also show toast just in case on desktop
+            showToast("Dialing Kisan Call Center...");
+        }
+
+        // 5. Logout
+        function handleLogout() {
+            showToast("Logging Out...");
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1000);
+        }
+
+        // 6. Toast Notification System
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            
+            msgEl.innerText = message;
+            toast.classList.remove('-translate-y-[200%]');
+            
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('-translate-y-[200%]');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
